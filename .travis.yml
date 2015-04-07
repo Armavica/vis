@@ -1,11 +1,22 @@
 language: c
-compiler:
-  - gcc
 env:
-  - DEBUG=
-  - DEBUG=debug
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "HODXcDA8ScUAwsJnGCroF0D0G3uvYKXYF7JwgMTq+/WArZQ8pHXrrQFN/W+GBYdWzL9lUkksPQro6kibB71oixWZ3WdF71IaoDtISP/8T3FnKq4D8/H11C3P/aZXgAD9j2gzhiwlBPw180EKyLnoNkQLkklQHgtqeCFf8zgCJeM="
+
 install:
   - export LIBTERMKEY=libtermkey-0.17 &&
     curl http://www.leonerd.org.uk/code/libtermkey/$LIBTERMKEY.tar.gz | tar xzf - &&
     make -C $LIBTERMKEY && make -C $LIBTERMKEY PREFIX=$(pwd)/build install
-script: CFLAGS=-I./build/include LDFLAGS=-L./build/lib make $DEBUG
+
+script: true
+
+addons:
+  coverity_scan:
+    project:
+      name: "martanne/vis"
+    notification_email: mat@brain-dump.org
+    build_command_prepend: export CFLAGS=-I./build/include LDFLAGS=-L./build/lib
+    build_command: make
+    branch_pattern: coverity_scan
