@@ -2,6 +2,6 @@ language: c
 compiler:
   - gcc
 env:
-  - TARGET=
   - TARGET=debug
+  - TARGET=test
 script: make local $TARGET
