@@ -22,6 +22,9 @@ vis: config.h config.mk *.c *.h
 	@echo ${CC} ${CFLAGS} ${CFLAGS_VIS} *.c ${LDFLAGS} ${LDFLAGS_VIS} -o $@
 	@${CC} ${CFLAGS} ${CFLAGS_VIS} *.c ${LDFLAGS} ${LDFLAGS_VIS} -o $@
 
+test: vis
+	@$(MAKE) -C test
+
 debug: clean
 	@$(MAKE) CFLAGS_VIS='${DEBUG_CFLAGS_VIS}'
 
@@ -92,4 +95,4 @@ local: dependencies
 	CFLAGS="$(CFLAGS) -I$(DEPS_INC)" LDFLAGS="$(LDFLAGS) -L$(DEPS_LIB)" make CFLAGS_TERMKEY= LDFLAGS_TERMKEY=-ltermkey
 	@echo Run with: LD_LIBRARY_PATH=$(DEPS_LIB) ./vis
 
-.PHONY: all clean dist install uninstall debug profile dependencies local
+.PHONY: all clean dist install uninstall debug profile dependencies local test
