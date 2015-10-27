@@ -13,6 +13,8 @@ fi
 TESTS_RUN=0
 TESTS_OK=0
 
+# TODO find a way to reliably goto normal mode in both editors
+CTRLC=""
 ESC="\e" # not portable
 
 $VIM --version | head -1
@@ -26,7 +28,12 @@ for t in $TESTS; do
 		VIM_OUT="$t.$VIM.out"
 		printf "Running test %s with %s ... " "$t" "$e"
 		rm -f "$OUT" "$ERR"
-		{ cat "$t.keys"; printf "$ESC:wq! $OUT\n"; } | $EDITOR "$t.in" 2> /dev/null
+		if [ "$e" = "$VIM" ]; then
+			NORMAL=$ESC
+		else
+			NORMAL=$CTRLC
+		fi
+		{ cat "$t.keys"; printf "$NORMAL:wq! $OUT\n"; } | $EDITOR "$t.in" 2> /dev/null
 		if [ "$e" = "$VIM" ]; then
 			if [ -e "$VIM_OUT" ]; then
 				printf "OK\n"
